@@ -1,0 +1,21 @@
+{% extends "components/base.html" %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block content %}
+<h1>Login Page</h1>
+
+<form method="post" class="m-5">
+    {{ form.hidden_tag() }}
+    <div class="mb-3 row">
+        {{ form.username(class="form-control", placeholder=form.username.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.password(class="form-control", placeholder=form.password.label.text) }}
+    </div>
+
+    <div class="mb-3 row">
+        {{ form.login_btn(class="form-control", placeholder=form.login_btn.label.text) }}
+    </div>
+</form>
+{% endblock %}

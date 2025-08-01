@@ -1,0 +1,22 @@
+{% extends "components/base.html" %}
+
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<div class="card bg-dark text-white">
+    <img src="/static/images/nature.jpg" class="card-img" alt="Nature" height="500px">
+    <div class="card-img-overlay">
+        <div class="row align-items-end">
+            <h5 class="card-title">Hikathon</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                content. This content is a little bit longer.</p>
+        </div>
+        {% if current_user.is_authenticated %}
+            <a href="/auth/logout" type="button" class="btn btn-secondary">Logout</a>
+        {% else %}
+            <a href="/auth/login" type="button" class="btn btn-light">Sign In</a>
+            <a href="/auth/register" type="button" class="btn btn-dark">Sign Up</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

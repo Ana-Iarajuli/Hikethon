@@ -1,0 +1,32 @@
+{% extends "components/base.html" %}
+
+{% block title %} Register Page {% endblock %}
+
+{% block content %}
+<h1>Register Page</h1>
+
+<form method="post" class="m-5">
+    {{ form.hidden_tag() }}
+    <div class="mb-3 row">
+        {{ form.name(class="form-control", placeholder=form.name.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.surname(class="form-control", placeholder=form.surname.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.username(class="form-control", placeholder=form.username.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.email(class="form-control", placeholder=form.email.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.password(class="form-control", placeholder=form.password.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.confirm_password(class="form-control", placeholder=form.confirm_password.label.text) }}
+    </div>
+    <div class="mb-3 row">
+        {{ form.register_btn(class="form-control", placeholder=form.register_btn.label.text) }}
+    </div>
+</form>
+{% endblock %}
