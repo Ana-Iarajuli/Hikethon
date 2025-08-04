@@ -1,21 +1,26 @@
-{% extends "components/base.html" %}
-
-{% block title %} Login Page {% endblock %}
-
+{% extends 'components/base.html' %}
+{% block title %}Sign In - Hikethon{% endblock %}
 {% block content %}
-<h1>Login Page</h1>
-
-<form method="post" class="m-5">
-    {{ form.hidden_tag() }}
-    <div class="mb-3 row">
-        {{ form.username(class="form-control", placeholder=form.username.label.text) }}
+<div class="centered-form-container">
+  <div class="form-card">
+    <h2 class="mb-4 text-center">Sign In</h2>
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Sign In</button>
+    </form>
+    <div class="text-center mt-3">
+      <span>Don't have an account? <a href="{{ url_for('auth.register') }}">Sign Up</a></span>
     </div>
-    <div class="mb-3 row">
-        {{ form.password(class="form-control", placeholder=form.password.label.text) }}
-    </div>
-
-    <div class="mb-3 row">
-        {{ form.login_btn(class="form-control", placeholder=form.login_btn.label.text) }}
-    </div>
-</form>
+  </div>
+</div>
 {% endblock %}

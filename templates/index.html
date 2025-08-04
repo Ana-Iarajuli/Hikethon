@@ -1,22 +1,32 @@
-{% extends "components/base.html" %}
-
-{% block title %} Home Page {% endblock %}
-
+{% extends 'components/base.html' %}
+{% block title %}Home - Hikethon{% endblock %}
 {% block content %}
-<div class="card bg-dark text-white">
-    <img src="/static/images/nature.jpg" class="card-img" alt="Nature" height="500px">
-    <div class="card-img-overlay">
-        <div class="row align-items-end">
-            <h5 class="card-title">Hikathon</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.</p>
+<div class="hero-section py-5">
+  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Hikethon Logo" class="hero-logo mb-3">
+  <div class="hero-title mb-2">Welcome to <span class="text-success">Hikethon</span></div>
+  <div class="hero-subtitle mb-4">Discover, plan, and share your hiking adventures with the community.</div>
+  <a href="/auth/login" class="btn btn-success btn-lg rounded-pill px-4">Plan New Trip</a>
+</div>
+<div class="container my-5">
+  <h2 class="mb-4 text-center text-success">Featured Trips</h2>
+  <div class="row justify-content-center">
+    {% for trip in trips %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <img src="{{ trip.image_url or url_for('static', filename='images/nature.jpg') }}" class="card-img-top" alt="Trip image">
+        <div class="card-body">
+          <h5 class="card-title">{{ trip.title }}</h5>
+          <p class="card-text">{{ trip.description[:100] }}{% if trip.description|length > 100 %}...{% endif %}</p>
+          <a href="/trips/{{ trip.id }}" class="btn btn-outline-success btn-sm rounded-pill">View Trip</a>
         </div>
-        {% if current_user.is_authenticated %}
-            <a href="/auth/logout" type="button" class="btn btn-secondary">Logout</a>
-        {% else %}
-            <a href="/auth/login" type="button" class="btn btn-light">Sign In</a>
-            <a href="/auth/register" type="button" class="btn btn-dark">Sign Up</a>
-        {% endif %}
+        <div class="card-footer text-muted small">
+          By {{ trip.creator_name }}
+        </div>
+      </div>
     </div>
+    {% else %}
+    <div class="col-12 text-center text-muted">No trips to show yet.</div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

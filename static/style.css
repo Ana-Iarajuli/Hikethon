@@ -1,3 +1,178 @@
 input[type='radio'] {
     list-style-type: none;
 }
+
+/* Sticky footer layout */
+.custom-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #e6f0f3 0%, #f4f8fa 100%);
+}
+.custom-main {
+    flex: 1 0 auto;
+}
+
+:root {
+    --hikethon-green: #205c3b;
+    --hikethon-green-dark: #163b16;
+    --hikethon-blue: #2a4d69;
+    --hikethon-blue-dark: #19324a;
+}
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(135deg, #e6f0f3 0%, #f4f8fa 100%);
+    padding: 5rem 1rem 3rem 1rem;
+    text-align: center;
+    border-radius: 2rem;
+    box-shadow: 0 2px 24px rgba(42,77,105,0.07);
+    margin-bottom: 2rem;
+}
+.hero-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+}
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--hikethon-blue-dark);
+    letter-spacing: 1px;
+}
+.hero-title .text-success {
+    color: var(--hikethon-green) !important;
+}
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--hikethon-green);
+    margin-bottom: 2rem;
+}
+
+/* Centered form card */
+.centered-form-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.form-card {
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    background: #fff;
+}
+
+/* Navbar custom styles */
+.navbar-search-form {
+    max-width: 400px;
+    width: 100%;
+    background: #f4f8fa;
+    border-radius: 2rem;
+    padding: 0.25rem 0.5rem;
+    box-shadow: 0 1px 6px rgba(42,77,105,0.04);
+}
+.navbar-search-input {
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    border-radius: 2rem;
+    box-shadow: none;
+    outline: none;
+    color: var(--hikethon-blue-dark);
+}
+.navbar-search-input:focus {
+    background: #e6f0f3;
+    box-shadow: none;
+}
+.navbar-search-btn {
+    background: var(--hikethon-green);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.navbar-search-btn:hover {
+    background: var(--hikethon-green-dark);
+    color: #fff;
+}
+
+.navbar-trips-link {
+    font-size: 1.15rem;
+    color: var(--hikethon-green) !important;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem !important;
+    border-radius: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+.navbar-trips-link:hover, .navbar-trips-link.active {
+    background: #e6f0f3;
+    color: var(--hikethon-green-dark) !important;
+}
+
+.btn-success, .btn-outline-success {
+    border-radius: 2rem !important;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+}
+.btn-success {
+    background: var(--hikethon-green);
+    border-color: var(--hikethon-green);
+}
+.btn-success:hover {
+    background: var(--hikethon-green-dark);
+    border-color: var(--hikethon-green-dark);
+}
+.btn-outline-success {
+    color: var(--hikethon-green);
+    border-color: var(--hikethon-green);
+    background: #fff;
+}
+.btn-outline-success:hover {
+    background: #e6f0f3;
+    color: var(--hikethon-green-dark);
+    border-color: var(--hikethon-green-dark);
+}
+
+/* Footer link hover effects */
+footer .nav-link {
+    color: var(--hikethon-blue-dark);
+    transition: background 0.2s, text-decoration 0.2s;
+    border-radius: 0.5rem;
+}
+footer .nav-link:hover {
+    background: #e6f0f3;
+    color: var(--hikethon-green-dark);
+    text-decoration: underline;
+}
+footer {
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    .hero-title { font-size: 1.5rem; }
+    .hero-logo { width: 56px; height: 56px; }
+    .form-card { padding: 1.5rem 0.5rem; }
+    .hero-section { padding: 2.5rem 0.5rem 1.5rem 0.5rem; }
+}
+
+/* Responsive tweaks for navbar */
+@media (max-width: 768px) {
+    .navbar-search-form {
+        max-width: 220px;
+        padding: 0.15rem 0.25rem;
+    }
+    .navbar-trips-link {
+        font-size: 1rem;
+        padding: 0.4rem 0.7rem !important;
+    }
+}

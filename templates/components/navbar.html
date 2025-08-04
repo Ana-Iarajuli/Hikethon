@@ -1,36 +1,60 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">Hikathon</a>
+    <!-- Logo on the left -->
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Hikethon Logo" width="40" height="40" class="me-2">
+      <span class="fw-bold d-none d-md-inline">HIKETHON</span>
+    </a>
+    <!-- Hamburger for mobile -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <!-- Navbar content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <!-- Centered search bar -->
+      <form class="d-flex mx-auto order-2 order-lg-1 navbar-search-form" role="search">
+        <input class="form-control navbar-search-input me-2" type="search" placeholder="Search trips..." aria-label="Search">
+        <button class="btn navbar-search-btn" type="submit" aria-label="Search">
+          <i class="bi bi-search"></i>
+        </button>
+      </form>
+      <!-- Trips link -->
+      <ul class="navbar-nav ms-3 me-2 align-items-center">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/routes">Routes</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Route Planner</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Features</a>
+          <a class="nav-link navbar-trips-link fw-bold" href="/trips">Trips</a>
         </li>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <!-- Right side controls -->
+      <div class="d-flex align-items-center ms-auto order-3">
+        <!-- Language Switcher -->
+        <div class="dropdown me-2">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            EN
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="langDropdown">
+            <li><a class="dropdown-item" href="#">EN</a></li>
+            <li><a class="dropdown-item" href="#">GEO</a></li>
+          </ul>
+        </div>
+        {% if current_user.is_authenticated %}
+        <a href="/plan" class="btn btn-success me-2 rounded-pill">Plan New Trip</a>
+        <!-- Profile Dropdown -->
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ current_user.profile_photo if current_user.profile_photo else url_for('static', filename='images/logo.png') }}" alt="Profile" class="rounded-circle" width="40" height="40">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/my_trips">My Trips</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+          </ul>
+        </div>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-success me-2 rounded-pill">Sign In</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-success rounded-pill">Sign Up</a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </nav>
