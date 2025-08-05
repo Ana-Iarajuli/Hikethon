@@ -25,10 +25,10 @@ class RegisterForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     username = StringField("Enter Username")
-    email = EmailField("JohnDoe@gmail.com")
-    password = PasswordField("*********")
+    email = EmailField("Email")
+    password = PasswordField("Password")
 
-    login_btn = SubmitField("Login")
+    login_btn = SubmitField("Sign In")
 
 
 class TripForm(FlaskForm):

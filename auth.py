@@ -18,7 +18,7 @@ def register():
                             email=form.email.data,
                             password=form.password.data)
             new_user.create()
-            return redirect(url_for("login"))
+            return redirect(url_for("auth.login"))
         return "email or username already exists"
     return render_template("auth/register.html", form=form)
 

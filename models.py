@@ -43,11 +43,11 @@ class User(db.Model, BaseModel, UserMixin):
 
     @staticmethod
     def check_email(email):
-        return User.query.filter_by(email=User.email).first()
+        return User.query.filter(email==User.email).first()
     
     @staticmethod
     def check_username(username):
-        return User.query.filter_by(username=User.username).first()
+        return User.query.filter(username==User.username).first()
 
 
 @login_manager.user_loader
