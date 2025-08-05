@@ -11,16 +11,15 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        existing_email = User.query.filter(form.email.data == User.email).first()
-        if not existing_email:
+        if not (User.check_username(form.username.data) and User.check_email(form.email.data)):
             new_user = User(name=form.name.data,
                             surname=form.surname.data,
                             username=form.username.data,
                             email=form.email.data,
                             password=form.password.data)
             new_user.create()
-            return redirect(url_for("index"))
-        return "email already exists"
+            return redirect(url_for("login"))
+        return "email or username already exists"
     return render_template("auth/register.html", form=form)
 
 

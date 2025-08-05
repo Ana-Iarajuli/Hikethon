@@ -1,26 +1,43 @@
 {% extends 'components/base.html' %}
 {% block title %}Sign Up - Hikethon{% endblock %}
 {% block content %}
-<div class="centered-form-container">
+<div class="centered-form-container mt-2">
   <div class="form-card">
     <h2 class="mb-4 text-center">Sign Up</h2>
-    {% if error %}
-      <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
+      {% for errors in form.errors.values() %}
+        {% for error in errors %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endfor %}
+      {% endfor %}
     <form method="post">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" required>
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+      {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.name.label }}
+          {{ form.name(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.surname.label }}
+          {{ form.surname(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.username.label }}
+          {{ form.username(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.email.label }}
+          {{ form.email(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.password.label }}
+          {{ form.password(class="form-control") }}
+        </div>
+        <div class="mb-3">
+          {{ form.confirm_password.label }}
+          {{ form.confirm_password(class="form-control") }}
+        </div>
+        {{ form.register_btn(class="btn btn-primary w-100", placeholder=form.register_btn.label.text) }}
     </form>
     <div class="text-center mt-3">
       <span>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></span>

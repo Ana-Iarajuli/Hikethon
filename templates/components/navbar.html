@@ -37,7 +37,7 @@
           </ul>
         </div>
         {% if current_user.is_authenticated %}
-        <a href="/plan" class="btn btn-success me-2 rounded-pill">Plan New Trip</a>
+        <a href="/trip/create" class="btn btn-success me-2 rounded-pill">Plan New Trip</a>
         <!-- Profile Dropdown -->
         <div class="dropdown">
           <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,6 +46,10 @@
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
             <li><a class="dropdown-item" href="/profile">Profile</a></li>
             <li><a class="dropdown-item" href="/my_trips">My Trips</a></li>
+            {% if current_user.is_authenticated and current_user.role == 'creator' %}
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/my_trips">Manage Requests</a></li>
+            {% endif %}
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
           </ul>

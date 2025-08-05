@@ -17,7 +17,7 @@
         <div class="card-body">
           <h5 class="card-title">{{ trip.title }}</h5>
           <p class="card-text">{{ trip.description[:100] }}{% if trip.description|length > 100 %}...{% endif %}</p>
-          <a href="/trips/{{ trip.id }}" class="btn btn-outline-success btn-sm rounded-pill">View Trip</a>
+          <a href="/route/{{ trip.id }}" class="btn btn-outline-success btn-sm rounded-pill">View Trip</a>
         </div>
         <div class="card-footer text-muted small">
           By {{ trip.creator_name }}

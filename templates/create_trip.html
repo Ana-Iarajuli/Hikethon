@@ -1,0 +1,23 @@
+{% extends 'components/base.html' %}
+{% block title %}Create Trip - Hikethon{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-center">Create a New Trip</h2>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      {{ form.name.label }} {{ form.name(class_="form-control") }}
+    </div>
+    <div class="mb-3">
+      {{ form.duration.label }} {{ form.duration(class_="form-control") }}
+    </div>
+    <div class="mb-3">
+      {{ form.difficulty.label }} {{ form.difficulty(class_="form-select") }}
+    </div>
+    <div class="mb-3">
+      {{ form.description.label }} {{ form.description(class_="form-control") }}
+    </div>
+    {{ form.Submit(class_="btn btn-success") }}
+  </form>
+</div>
+{% endblock %}

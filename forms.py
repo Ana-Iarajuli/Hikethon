@@ -3,6 +3,7 @@ from wtforms.fields import (StringField, EmailField, PasswordField, IntegerField
                             DateTimeField, SubmitField, SelectField, TextAreaField)
 from wtforms.validators import equal_to, DataRequired, length
 from flask_wtf.file import FileField, FileSize, FileAllowed, FileRequired
+from wtforms import RadioField
 
 
 class RegisterForm(FlaskForm):
@@ -10,7 +11,7 @@ class RegisterForm(FlaskForm):
     surname = StringField("Enter Surname")
     username = StringField("Enter Username", validators=[DataRequired()])
     email = EmailField("JohnDoe@gmail.com", validators=[DataRequired()])
-    password = PasswordField("*********", validators=[
+    password = PasswordField("Password", validators=[
         DataRequired(),
         length(min=4, max=24, message="Password length must be between 4-24 characters")
     ])
@@ -42,3 +43,12 @@ class TripForm(FlaskForm):
     description = TextAreaField("Description", validators=[DataRequired()])
 
     Submit = SubmitField("Create Trip")
+
+
+class ReviewForm(FlaskForm):
+    rating = RadioField("Rating", choices=[(str(i), str(i)) for i in range(1, 6)], validators=[DataRequired()])
+    comment = TextAreaField("Comment", validators=[length(max=500)])
+    submit = SubmitField("Submit Review")
+
+class TripRequestForm(FlaskForm):
+    submit = SubmitField("Request to Join")
