@@ -1,7 +1,7 @@
 from ext import app
 from flask import render_template, request, redirect, url_for, flash
 from auth import auth_bp
-from models import Trip, Review, TripRequest, db
+from models import Trip, User, Review, TripRequest, db
 from forms import ReviewForm, TripRequestForm, TripForm
 from flask_login import current_user, login_required
 
@@ -15,20 +15,22 @@ def index():
 
 @app.route("/trips", methods=["GET"])
 def view_trips():
-    return render_template("trips.html")
+    trips = Trip.query.all()
+    return render_template("trips.html", trips=trips)
 
 @app.route("/profile")
 def profile():
-    pass
+    return "profile page"
 
 
 @app.route("/trip/<int:trip_id>", methods=["GET", "POST"])
 @login_required
 def trip(trip_id):
     trip = Trip.query.get_or_404(trip_id)
+    trip_creator = User.query.filter_by(id=trip.creator_id).first()
     review_form = ReviewForm()
     request_form = TripRequestForm()
-    user_is_creator = trip.created_by == current_user.id
+    user_is_creator = trip.creator_id == current_user.id
 
     # Handle review submission
     if review_form.validate_on_submit() and review_form.submit.data:
@@ -64,6 +66,7 @@ def trip(trip_id):
     return render_template(
         "trip_detail.html",
         trip=trip,
+        trip_creator=trip_creator,
         reviews=reviews,
         review_form=review_form,
         request_form=request_form,
@@ -74,7 +77,7 @@ def trip(trip_id):
 @login_required
 def manage_requests(trip_id):
     trip = Trip.query.get_or_404(trip_id)
-    if trip.created_by != current_user.id:
+    if trip.creator_id != current_user.id:
         flash("You are not authorized to view this page.")
         return redirect(url_for("trip", trip_id=trip_id))
     requests = TripRequest.query.filter_by(trip_id=trip.id).all()
@@ -86,19 +89,19 @@ def manage_requests(trip_id):
 def create_trip():
     form = TripForm()
     if form.validate_on_submit():
-        trip = Trip(
+        new_trip = Trip(
             name=form.name.data,
             duration=form.duration.data,
             difficulty=form.difficulty.data,
             description=form.description.data,
-            created_by=current_user.id
+            creator_id=current_user.id
         )
-        db.session.add(trip)
+        new_trip.create()
         # Automatically assign creator role if not already
         if current_user.role != "creator":
             current_user.role = "creator"
         db.session.commit()
         flash("Trip created successfully! You are now a creator.")
-        return redirect(url_for("trip", trip_id=trip.id))
+        return redirect(url_for("trip", trip_id=new_trip.id))
     return render_template("create_trip.html", form=form)
 

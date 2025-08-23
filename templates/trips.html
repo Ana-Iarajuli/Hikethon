@@ -1,0 +1,35 @@
+{% extends 'components/base.html' %}
+{% block title %}Trips - Hikethon{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center row-cols-1 row-cols-md-2 g-4">
+        {% for trip in trips %}
+        <div class="col-md-12 col-lg-6">
+            <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ trip.name }}
+<!--                        Needs optimization-->
+                        {% if trip.difficulty == "easy" %}
+                        <span class="badge bg-success">Easy</span>
+                        {% elif trip.difficulty == "moderate" %}
+                        <span class="badge bg-primary">Moderate</span>
+                        {% elif trip.difficulty == "hard" %}
+                        <span class="badge bg-danger">Hard</span>
+                        {% else %}
+                        <span class="badge bg-dark">Extreme</span>
+                        {% endif %}
+                    </h5>
+                    <p class="card-text">{{ trip.duration }}</p>
+                    <a href="/trip/{{ trip.id }}" type="button" class="btn btn-outline-success">View Details</a>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Created: {{ trip.date_created }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -61,10 +61,11 @@ class Trip(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
-    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     duration = db.Column(db.Integer, nullable=False)
     difficulty = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
 
     user = db.relationship("User", backref="trips")
 

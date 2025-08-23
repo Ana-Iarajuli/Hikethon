@@ -5,7 +5,12 @@
   <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Hikethon Logo" class="hero-logo mb-3">
   <div class="hero-title mb-2">Welcome to <span class="text-success">Hikethon</span></div>
   <div class="hero-subtitle mb-4">Discover, plan, and share your hiking adventures with the community.</div>
-  <a href="/auth/login" class="btn btn-success btn-lg rounded-pill px-4">Plan New Trip</a>
+<!--  Need to optimize-->
+  {% if current_user.is_authenticated %}
+    <a href="/trip/create" class="btn btn-success btn-lg rounded-pill px-4">Plan New Trip</a>
+  {% else %}
+    <a href="/auth/login" class="btn btn-success btn-lg rounded-pill px-4">Plan New Trip</a>
+  {% endif %}
 </div>
 <div class="container my-5">
   <h2 class="mb-4 text-center text-success">Featured Trips</h2>
@@ -25,7 +30,7 @@
       </div>
     </div>
     {% else %}
-    <div class="col-12 text-center text-muted">No trips to show yet.</div>
+      <div class="col-12 text-center text-muted">No trips to show yet.</div>
     {% endfor %}
   </div>
 </div>
