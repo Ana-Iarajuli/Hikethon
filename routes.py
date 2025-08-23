@@ -105,3 +105,8 @@ def create_trip():
         return redirect(url_for("trip", trip_id=new_trip.id))
     return render_template("create_trip.html", form=form)
 
+@app.route("/my_trips")
+@login_required
+def my_trips():
+    user_trips = Trip.query.filter_by(creator_id=current_user.id).all()
+    return render_template("trips.html", trips=user_trips)
