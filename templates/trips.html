@@ -7,7 +7,7 @@
         {% for trip in trips %}
         <div class="col-md-12 col-lg-6">
             <div class="card">
-                <img src="..." class="card-img-top" alt="...">
+                <img src="/static/images/{{ trip.trip_img }}" class="card-img-top trip-img" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ trip.name }}
 <!--                        Needs optimization-->
@@ -23,12 +23,15 @@
                     </h5>
                     <p class="card-text">{{ trip.duration }}</p>
                     <a href="/trip/{{ trip.id }}" type="button" class="btn btn-outline-success">View Details</a>
+                    <a href="/delete_trip/{{ trip.id }}" type="button" class="btn btn-outline-danger">Delete Trip</a>
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">Created: {{ trip.date_created }}</small>
                 </div>
             </div>
         </div>
+        {% else %}
+            <h3 class="col-12 text-center text-success">No trips to show yet.</h3>
         {% endfor %}
     </div>
 </div>

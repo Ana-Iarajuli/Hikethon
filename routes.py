@@ -4,6 +4,7 @@ from auth import auth_bp
 from models import Trip, User, Review, TripRequest, db
 from forms import ReviewForm, TripRequestForm, TripForm
 from flask_login import current_user, login_required
+from os import path
 
 app.register_blueprint(auth_bp)
 
@@ -18,9 +19,12 @@ def view_trips():
     trips = Trip.query.all()
     return render_template("trips.html", trips=trips)
 
+
 @app.route("/profile")
+@login_required
 def profile():
-    return "profile page"
+    trips = Trip.query.filter(Trip.creator_id == current_user.id).all()
+    return render_template("profile.html", current_user=current_user, trips=trips)
 
 
 @app.route("/trip/<int:trip_id>", methods=["GET", "POST"])
@@ -31,6 +35,7 @@ def trip(trip_id):
     review_form = ReviewForm()
     request_form = TripRequestForm()
     user_is_creator = trip.creator_id == current_user.id
+    # reviews = Review.query.filter(Review.trip_id == trip_id).all()
 
     # Handle review submission
     if review_form.validate_on_submit() and review_form.submit.data:
@@ -42,8 +47,9 @@ def trip(trip_id):
                 rating=int(review_form.rating.data),
                 comment=review_form.comment.data
             )
-            db.session.add(review)
-            db.session.commit()
+            review.create()
+            # db.session.add(review)
+            # db.session.commit()
             flash("Review submitted!")
             return redirect(url_for("trip", trip_id=trip_id))
         else:
@@ -55,8 +61,9 @@ def trip(trip_id):
             existing_request = TripRequest.query.filter_by(user_id=current_user.id, trip_id=trip.id).first()
             if not existing_request:
                 req = TripRequest(user_id=current_user.id, trip_id=trip.id)
-                db.session.add(req)
-                db.session.commit()
+                req.create()
+                # db.session.add(req)
+                # db.session.commit()
                 flash("Request sent to trip creator!")
             else:
                 flash("You have already requested to join this trip.")
@@ -94,16 +101,27 @@ def create_trip():
             duration=form.duration.data,
             difficulty=form.difficulty.data,
             description=form.description.data,
-            creator_id=current_user.id
+            creator_id=current_user.id,
         )
         new_trip.create()
+        trip_img = form.trip_img.data
+        directory = path.join(app.root_path, "static", "images", trip_img.filename)
+        trip_img.save(directory)
+        new_trip.trip_img = trip_img.filename
         # Automatically assign creator role if not already
         if current_user.role != "creator":
             current_user.role = "creator"
-        db.session.commit()
+        new_trip.save()
         flash("Trip created successfully! You are now a creator.")
         return redirect(url_for("trip", trip_id=new_trip.id))
     return render_template("create_trip.html", form=form)
+
+@app.route("/delete_trip/<int:trip_id>")
+@login_required
+def delete_trip(trip_id):
+    trip = Trip.query.get(trip_id)
+    trip.delete()
+    return redirect("/trips")
 
 @app.route("/my_trips")
 @login_required

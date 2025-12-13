@@ -65,7 +65,7 @@ class Trip(db.Model, BaseModel):
     difficulty = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
+    trip_img = db.Column(db.String(100), nullable=False)
 
     user = db.relationship("User", backref="trips")
 

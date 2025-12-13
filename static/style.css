@@ -40,9 +40,11 @@ input[type='radio'] {
     color: var(--hikethon-blue-dark);
     letter-spacing: 1px;
 }
-.hero-title .text-success {
+
+.text-success {
     color: var(--hikethon-green) !important;
 }
+
 .hero-subtitle {
     font-size: 1.3rem;
     color: var(--hikethon-green);
@@ -175,4 +177,9 @@ footer {
         font-size: 1rem;
         padding: 0.4rem 0.7rem !important;
     }
+}
+
+.trip-img {
+    height: 200px;
+    width: 200px;
 }

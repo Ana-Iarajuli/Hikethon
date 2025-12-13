@@ -1,0 +1,31 @@
+{% extends 'components/base.html' %}
+{% block title %}Profile - Hikethon{% endblock %}
+{% block content %}
+<div class="hero-section py-5 shadow-sm">
+  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Hikethon Logo" class="hero-logo mb-3">
+  <div class="hero-title mb-2">Welcome to <span class="text-success">Profile Page</span></div>
+  <div class="hero-subtitle mb-4">{{ current_user["name"] }}</div>
+  {% if not trips %}
+    <a href="/trip/create" class="btn btn-success btn-lg rounded-pill px-4">Plan New Trip</a>
+  {% endif %}
+</div>
+<div class="container my-5">
+  <h2 class="mb-4 text-center text-success">Trips created by YOU!</h2>
+  <div class="row justify-content-center">
+    {% for trip in trips %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <img src="/static/images/{{ trip.trip_img }}" class="card-img-top trip-img" alt="Trip image">
+        <div class="card-body">
+          <h5 class="card-title">{{ trip.title }}</h5>
+          <p class="card-text">{{ trip.description[:100] }}{% if trip.description|length > 100 %}...{% endif %}</p>
+          <a href="/trip/{{ trip.id }}" class="btn btn-outline-success btn-sm rounded-pill">View Trip</a>
+        </div>
+      </div>
+    </div>
+    {% else %}
+      <div class="col-12 text-center text-muted">No trips to show yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

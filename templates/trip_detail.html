@@ -6,10 +6,10 @@
     <div class="row justify-content-center row-cols-1 row-cols-md-2 g-4">
         <div class="col-md-12 col-lg-6">
             <div class="card">
-                <img src="..." class="card-img-top" alt="...">
+                <img src="/static/images/{{ trip.trip_img }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ trip.name }}
-<!--                        Needs optimization-->
+                        <!--                        Needs optimization-->
                         {% if trip.difficulty == "easy" %}
                         <span class="badge bg-success">Easy</span>
                         {% elif trip.difficulty == "moderate" %}
@@ -30,9 +30,35 @@
                     </small>
                 </div>
             </div>
+            <p>REVIEWS</p>
+            {% for review in reviews %}
+                {{ review.comment }}
+            {% endfor %}
+            <form method="post" class="mt-5">
+                {{ review_form.hidden_tag() }}
+                <h4>{{ review_form.rating.label }}</h4>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-check-inline">
+                            {% for option in review_form.rating %}
+                            <div class="form-check form-check-inline">
+                                {{ option.label(class="form-check-label") }}
+                                {{ option(class="form-check-input") }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row mt-3">
+                            {{ review_form.comment(class="form-control") }}
+                        </div>
+                        <div class="row mt-3">
+                            {{ review_form.submit(class="btn btn-success") }}
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
         </div>
     </div>
 </div>
-
-
 {% endblock %}

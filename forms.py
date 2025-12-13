@@ -32,6 +32,11 @@ class LoginForm(FlaskForm):
 
 
 class TripForm(FlaskForm):
+    trip_img = FileField("Upload Trip Photo", validators=[
+        FileRequired(message="You must upload photo"),
+        FileSize(1024 * 1024 * 5),
+        FileAllowed(["jpg", "png", "jpeg", "JPG"], message="Only jpg/png files are allowed")
+    ])
     name = StringField("Trip Name", validators=[DataRequired()])
     duration = StringField("Duration (e.g. 2 days)", validators=[DataRequired()])
     difficulty = SelectField("Difficulty", choices=[
@@ -49,6 +54,7 @@ class ReviewForm(FlaskForm):
     rating = RadioField("Rating", choices=[(str(i), str(i)) for i in range(1, 6)], validators=[DataRequired()])
     comment = TextAreaField("Comment", validators=[length(max=500)])
     submit = SubmitField("Submit Review")
+
 
 class TripRequestForm(FlaskForm):
     submit = SubmitField("Request to Join")

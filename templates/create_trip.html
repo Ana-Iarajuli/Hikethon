@@ -3,8 +3,11 @@
 {% block content %}
 <div class="container py-4">
   <h2 class="mb-4 text-center">Create a New Trip</h2>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
+     <div class="mb-3">
+      {{ form.trip_img(class="form-control", accept=".png, .jpg, .jpeg") }}
+    </div>
     <div class="mb-3">
       {{ form.name.label }} {{ form.name(class_="form-control") }}
     </div>
