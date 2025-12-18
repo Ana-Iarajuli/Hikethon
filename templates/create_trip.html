@@ -2,25 +2,39 @@
 {% block title %}Create Trip - Hikethon{% endblock %}
 {% block content %}
 <div class="container py-4">
-  <h2 class="mb-4 text-center">Create a New Trip</h2>
-  <form method="post" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-     <div class="mb-3">
-      {{ form.trip_img(class="form-control", accept=".png, .jpg, .jpeg") }}
-    </div>
-    <div class="mb-3">
-      {{ form.name.label }} {{ form.name(class_="form-control") }}
-    </div>
-    <div class="mb-3">
-      {{ form.duration.label }} {{ form.duration(class_="form-control") }}
-    </div>
-    <div class="mb-3">
-      {{ form.difficulty.label }} {{ form.difficulty(class_="form-select") }}
-    </div>
-    <div class="mb-3">
-      {{ form.description.label }} {{ form.description(class_="form-control") }}
-    </div>
-    {{ form.Submit(class_="btn btn-success") }}
-  </form>
+    <h2 class="mb-4 text-center">Create a New Trip</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.trip_img(class="form-control", accept=".png, .jpg, .jpeg") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.name.label }} {{ form.name(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.start_date.label }} {{ form.start_date(class_="form-control") }}
+                </div>
+                {% for error in form.end_date.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+                <div class="mb-3">
+                    {{ form.end_date.label }} {{ form.end_date(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.difficulty.label }} {{ form.difficulty(class_="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.description.label }} {{ form.description(class_="form-control") }}
+                </div>
+               <div class="row justify-content-center">
+                    <div class="col-6 d-grid">
+                        {{ form.submit(class_="btn btn-success w-100") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock %}

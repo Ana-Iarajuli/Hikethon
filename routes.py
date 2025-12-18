@@ -5,6 +5,7 @@ from models import Trip, User, Review, TripRequest, db
 from forms import ReviewForm, TripRequestForm, TripForm
 from flask_login import current_user, login_required
 from os import path
+from datetime import timedelta
 
 app.register_blueprint(auth_bp)
 
@@ -80,6 +81,7 @@ def trip(trip_id):
         user_is_creator=user_is_creator
     )
 
+
 @app.route("/trip/<int:trip_id>/requests")
 @login_required
 def manage_requests(trip_id):
@@ -96,24 +98,26 @@ def manage_requests(trip_id):
 def create_trip():
     form = TripForm()
     if form.validate_on_submit():
+        trip_img = form.trip_img.data
+        directory = path.join(app.root_path, "static", "images", trip_img.filename)
+        trip_img.save(directory)
         new_trip = Trip(
+            trip_img = trip_img.filename,
             name=form.name.data,
-            duration=form.duration.data,
+            start_date=form.start_date.data,
+            end_date=form.end_date.data,
             difficulty=form.difficulty.data,
             description=form.description.data,
             creator_id=current_user.id,
         )
         new_trip.create()
-        trip_img = form.trip_img.data
-        directory = path.join(app.root_path, "static", "images", trip_img.filename)
-        trip_img.save(directory)
-        new_trip.trip_img = trip_img.filename
-        # Automatically assign creator role if not already
+
         if current_user.role != "creator":
             current_user.role = "creator"
-        new_trip.save()
+
         flash("Trip created successfully! You are now a creator.")
         return redirect(url_for("trip", trip_id=new_trip.id))
+
     return render_template("create_trip.html", form=form)
 
 @app.route("/delete_trip/<int:trip_id>")

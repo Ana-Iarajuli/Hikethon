@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import (StringField, EmailField, PasswordField, IntegerField,
-                            DateTimeField, SubmitField, SelectField, TextAreaField)
-from wtforms.validators import equal_to, DataRequired, length
+                            DateTimeField, SubmitField, SelectField, TextAreaField, DateField)
+from wtforms.validators import equal_to, DataRequired, length, ValidationError
 from flask_wtf.file import FileField, FileSize, FileAllowed, FileRequired
 from wtforms import RadioField
 
@@ -38,7 +38,8 @@ class TripForm(FlaskForm):
         FileAllowed(["jpg", "png", "jpeg", "JPG"], message="Only jpg/png files are allowed")
     ])
     name = StringField("Trip Name", validators=[DataRequired()])
-    duration = StringField("Duration (e.g. 2 days)", validators=[DataRequired()])
+    start_date = DateField("Start Date", validators=[DataRequired()])
+    end_date = DateField("End Date", validators=[DataRequired()])
     difficulty = SelectField("Difficulty", choices=[
         ('easy', 'Easy'),
         ('moderate', 'Moderate'),
@@ -47,7 +48,11 @@ class TripForm(FlaskForm):
     ], validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
 
-    Submit = SubmitField("Create Trip")
+    submit = SubmitField("Create Trip")
+
+    def validate_end_date(self, field):
+        if self.start_date.data and field.data < self.start_date.data:
+            raise ValidationError("End date cannot be before start date.")
 
 
 class ReviewForm(FlaskForm):
