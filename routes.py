@@ -5,7 +5,7 @@ from models import Trip, User, Review, TripRequest, TripParticipant
 from forms import ReviewForm, TripRequestForm, TripForm
 from flask_login import current_user, login_required
 from os import path, abort
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 
 app.register_blueprint(auth_bp)
 
@@ -116,6 +116,7 @@ def cancel_trip_request(request_id):
         return redirect(url_for("trip", trip_id=req.trip_id))
 
     req.status = "cancelled"
+    req.responded_at = datetime.now()
     req.save()
 
     flash("Request cancelled")
@@ -125,19 +126,53 @@ def cancel_trip_request(request_id):
 @app.route("/requests")
 @login_required
 def manage_requests():
+    # requests which user made
     my_requests = (
         TripRequest.query.join(Trip)
         .filter(TripRequest.user_id==current_user.id).all()
     )
+
+    # requests of trips user made
     incoming_requests = (
         TripRequest.query.join(Trip)
         .filter(Trip.creator_id==current_user.id)
-        .filter(TripRequest.status=="pending")
         .all()
     )
 
-    return render_template("manage_requests.html", my_requests=my_requests, incoming_requests=incoming_requests)
+    return render_template("manage_requests.html",
+                           my_requests=my_requests,
+                           incoming_requests=incoming_requests)
 
+@app.route("/trip-request/<int:request_id>/accept", methods=["GET", "POST"])
+@login_required
+def accept_request(request_id):
+    req = TripRequest.query.get(request_id)
+
+    if req.trip.creator_id != current_user.id:
+        abort(403)
+
+    req.status = "accepted"
+    req.responded_at = datetime.now()
+    trip_participant = TripParticipant(trip_id=req.trip_id, user_id=req.user_id)
+    trip_participant.create()
+
+    flash(f"Request accepted for {req.trip.user.name} {req.trip.user.surname}")
+    return redirect(url_for("manage_requests"))
+
+
+@app.route("/trip-request/<int:request_id>/deny", methods=["GET", "POST"])
+@login_required
+def deny_request(request_id):
+    req = TripRequest.query.get(request_id)
+
+    if req.trip.creator_id != current_user.id:
+        abort(403)
+
+    req.status = "denied"
+    req.save()
+
+    flash(f"Request denied for {req.trip.user.name} {req.trip.user.surname}")
+    return redirect(url_for("manage_requests"))
 
 @app.route("/trip/create", methods=["GET", "POST"])
 @login_required

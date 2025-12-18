@@ -1,0 +1,99 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Manage Requests - Hikethon{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-success">My Requests</h2>
+    <div class="row justify-content-center">
+        {% if my_requests %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Request id</th>
+                <th scope="col">Trip Name</th>
+                <th scope="col">Trip Creator</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Request sent at</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for request in my_requests %}
+                <tr>
+                    <th scope="row">{{ request.id }}</th>
+                    <td>{{ request.trip.name }}</td>
+                    <td>{{ request.trip.user.username }}</td>
+                    <td>{{ request.trip.user.email }}</td>
+                    <td>{{ request.created_at.strftime("%Y-%m-%d") }}</td>
+                    <td>
+                        {% if request.status == "pending" %}
+                          <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif request.status == "accepted" %}
+                          <span class="badge bg-success">Accepted</span>
+                        {% elif request.status == "rejected" %}
+                          <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <div class="col-12 text-center text-muted">No Requests to show yet.</div>
+        {% endif %}
+    </div>
+</div>
+<div class="container my-5">
+    <h2 class="mb-4 text-success">Incoming Requests</h2>
+    <div class="row justify-content-center">
+        {% if incoming_requests %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Request id</th>
+                <th scope="col">Trip Name</th>
+                <th scope="col">Participant name</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Request sent at</th>
+                <th scope="col">Status</th>
+                {% if request.status == "pending" %}
+                <th scope="col">Participation</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+                {% for request in incoming_requests %}
+                <tr>
+                    <th scope="row">{{ request.id }}</th>
+                    <td><a href="/trip/{{ request.trip_id }}" class="text-decoration-none text-dark">{{ request.trip.name }}</a></td>
+                    <td><a href="/profile" class="text-decoration-none text-dark">{{ request.trip.user.username }}</a></td>
+                    <td>{{ request.trip.user.email }}</td>
+                    <td>{{ request.created_at.strftime("%Y-%m-%d") }}</td>
+                    <td>
+                        {% if request.status == "pending" %}
+                          <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif request.status == "accepted" %}
+                          <span class="badge bg-success">Accepted</span>
+                        {% elif request.status == "denied" %}
+                          <span class="badge bg-danger">Denied</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if request.status == "pending" %}
+                        <a href="/trip-request/{{ request.id }}/accept"><span class="badge bg-success">Accept</span></a>
+                        <a href="/trip-request/{{ request.id }}/deny"><span class="badge bg-danger">Reject</span></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <div class="col-12 text-center text-muted">No Requests to show yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

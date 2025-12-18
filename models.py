@@ -115,7 +115,7 @@ class TripRequest(db.Model, BaseModel):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     responded_at = db.Column(db.DateTime)
 
-    user = db.relationship('User', backref="trip_requests", lazy=True)
+    user = db.relationship('User', backref="trip_requests", lazy=True) # creator of the trip
     trip = db.relationship('Trip', backref="requests", lazy=True)
 
 
