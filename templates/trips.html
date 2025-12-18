@@ -21,12 +21,13 @@
                         <span class="badge bg-dark">Extreme</span>
                         {% endif %}
                     </h5>
-                    <p class="card-text">{{ trip.duration }}</p>
+                    <p class="card-text">Start date: {{ trip.start_date }}</p>
+                    <p class="card-text">End date: {{ trip.end_date }}</p>
                     <a href="/trip/{{ trip.id }}" type="button" class="btn btn-outline-success">View Details</a>
                     <a href="/delete_trip/{{ trip.id }}" type="button" class="btn btn-outline-danger">Delete Trip</a>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">Created: {{ trip.date_created }}</small>
+                    <small class="text-muted">Created at: {{ trip.date_created }}</small>
                 </div>
             </div>
         </div>

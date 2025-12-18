@@ -111,8 +111,9 @@ class TripRequest(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='pending')  # pending, accepted, rejected
+    status = db.Column(db.String(20), nullable=False)  # pending, cancelled (by user); accepted, rejected (by trip creator)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    responded_at = db.Column(db.DateTime)
 
     user = db.relationship('User', backref="trip_requests", lazy=True)
     trip = db.relationship('Trip', backref="requests", lazy=True)

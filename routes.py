@@ -1,11 +1,11 @@
-from ext import app
+from ext import app, db
 from flask import render_template, request, redirect, url_for, flash
 from auth import auth_bp
-from models import Trip, User, Review, TripRequest, db
+from models import Trip, User, Review, TripRequest, TripParticipant
 from forms import ReviewForm, TripRequestForm, TripForm
 from flask_login import current_user, login_required
-from os import path
-from datetime import timedelta
+from os import path, abort
+from datetime import timedelta, date
 
 app.register_blueprint(auth_bp)
 
@@ -36,8 +36,11 @@ def trip(trip_id):
     review_form = ReviewForm()
     request_form = TripRequestForm()
     user_is_creator = trip.creator_id == current_user.id
-    # reviews = Review.query.filter(Review.trip_id == trip_id).all()
-
+    user_is_participant = TripParticipant.query.filter_by(trip_id=trip.id,
+                                                          user_id=current_user.id).first() is not None
+    existing_request = TripRequest.query.filter_by(user_id=current_user.id,
+                                                   trip_id=trip.id,
+                                                   status="pending").first()
     # Handle review submission
     if review_form.validate_on_submit() and review_form.submit.data:
         already_reviewed = Review.query.filter_by(user_id=current_user.id, trip_id=trip.id).first()
@@ -49,27 +52,12 @@ def trip(trip_id):
                 comment=review_form.comment.data
             )
             review.create()
-            # db.session.add(review)
-            # db.session.commit()
             flash("Review submitted!")
             return redirect(url_for("trip", trip_id=trip_id))
         else:
             flash("You have already reviewed this trip.")
 
-    # Handle trip request
-    if request_form.validate_on_submit() and request_form.submit.data:
-        if not user_is_creator:
-            existing_request = TripRequest.query.filter_by(user_id=current_user.id, trip_id=trip.id).first()
-            if not existing_request:
-                req = TripRequest(user_id=current_user.id, trip_id=trip.id)
-                req.create()
-                # db.session.add(req)
-                # db.session.commit()
-                flash("Request sent to trip creator!")
-            else:
-                flash("You have already requested to join this trip.")
-            return redirect(url_for("trip", trip_id=trip_id))
-
+    is_past = date.today() > trip.end_date
     reviews = Review.query.filter_by(trip_id=trip.id).all()
     return render_template(
         "trip_detail.html",
@@ -77,20 +65,78 @@ def trip(trip_id):
         trip_creator=trip_creator,
         reviews=reviews,
         review_form=review_form,
+        is_past=is_past,
         request_form=request_form,
-        user_is_creator=user_is_creator
+        user_is_creator=user_is_creator,
+        user_is_participant=user_is_participant,
+        existing_request=existing_request
     )
 
 
-@app.route("/trip/<int:trip_id>/requests")
+@app.route("/trip/<int:trip_id>/request", methods=["GET", "POST"])
 @login_required
-def manage_requests(trip_id):
+def request_join_trip(trip_id):
     trip = Trip.query.get_or_404(trip_id)
-    if trip.creator_id != current_user.id:
-        flash("You are not authorized to view this page.")
-        return redirect(url_for("trip", trip_id=trip_id))
-    requests = TripRequest.query.filter_by(trip_id=trip.id).all()
-    return render_template("manage_requests.html", trip=trip, requests=requests)
+
+    if trip.creator_id == current_user.id:
+        abort(403)
+
+    user_is_participant = TripParticipant.query.filter_by(
+        trip_id=trip.id,
+        user_id=current_user.id
+    ).first()
+
+    if user_is_participant:
+        flash("You are already a participant.")
+        return redirect(url_for("trip", trip_id=trip.id))
+
+    existing_request = TripRequest.query.filter_by(
+        trip_id=trip.id,
+        user_id=current_user.id
+    ).first()
+
+    if existing_request:
+        flash("You already sent a request.")
+        return redirect(url_for("trip", trip_id=trip.id))
+
+    req = TripRequest(user_id=current_user.id, trip_id=trip.id, status="pending")
+    req.create()
+
+    flash("Request sent to trip creator!")
+    return redirect(url_for("trip", trip_id=trip.id))
+
+
+@app.route("/trip-request/<int:request_id>/cancel", methods=["GET", "POST"])
+@login_required
+def cancel_trip_request(request_id):
+    req = TripRequest.query.get(request_id)
+
+    if req.status != "pending":
+        flash("You can only cancel pending requests")
+        return redirect(url_for("trip", trip_id=req.trip_id))
+
+    req.status = "cancelled"
+    req.save()
+
+    flash("Request cancelled")
+    return redirect(url_for("trip", trip_id=req.trip_id))
+
+
+@app.route("/requests")
+@login_required
+def manage_requests():
+    my_requests = (
+        TripRequest.query.join(Trip)
+        .filter(TripRequest.user_id==current_user.id).all()
+    )
+    incoming_requests = (
+        TripRequest.query.join(Trip)
+        .filter(Trip.creator_id==current_user.id)
+        .filter(TripRequest.status=="pending")
+        .all()
+    )
+
+    return render_template("manage_requests.html", my_requests=my_requests, incoming_requests=incoming_requests)
 
 
 @app.route("/trip/create", methods=["GET", "POST"])

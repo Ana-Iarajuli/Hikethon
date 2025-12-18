@@ -62,4 +62,5 @@ class ReviewForm(FlaskForm):
 
 
 class TripRequestForm(FlaskForm):
-    submit = SubmitField("Request to Join")
+    join_btn = SubmitField("Request to Join")
+    cancel_request_btn = SubmitField("Cancel request")
